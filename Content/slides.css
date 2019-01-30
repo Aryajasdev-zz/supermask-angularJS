@@ -1,0 +1,225 @@
+.slide-eye-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/eye-masks.jpg');
+background-repeat:no-repeat;
+-webkit-background-size:cover;
+-moz-background-size:cover;
+-o-background-size:cover;
+background-size:cover;
+background-position:left;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-feathered {
+position: relative;
+display: block;
+background: url('../images/slideshow/feathered.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-full-face-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/Full Face.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-scary-horror-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/scary-horror-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-animal-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/animal-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-deluxe-venetian-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/deluxe-venetian-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-clearance {
+position: relative;
+display: block;
+background: url('../images/slideshow/clearance.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-coloured-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/coloured-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-cartoon-character-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/coloured-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 350px;
+margin-bottom: 20px;
+}
+
+.slide-eye-masks.catpage,.slide-feathered.catpage,.slide-full-face-masks.catpage,.slide-scary-horror-masks.catpage,.slide-animal-masks.catpage,.slide-deluxe-venetian-masks.catpage,.slide-clearance.catpage,.slide-coloured-masks.catpage,.slide-cartoon-character-masks.catpage {
+background-position:100% 150%;
+}
+
+.slide-cat-eye-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/eye-masks.jpg');
+background-repeat:no-repeat;
+-webkit-background-size:cover;
+-moz-background-size:cover;
+-o-background-size:cover;
+background-size:cover;
+background-position:left;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-feathered {
+position: relative;
+display: block;
+background: url('../images/slideshow/feathered.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-full-face-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/Full Face.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-scary-horror-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/scary-horror-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-animal-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/animal-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-deluxe-venetian-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/deluxe-venetian-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-clearance {
+position: relative;
+display: block;
+background: url('../images/slideshow/clearance.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-coloured-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/coloured-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}
+
+.slide-cat-cartoon-character-masks {
+position: relative;
+display: block;
+background: url('../images/slideshow/coloured-masks.jpg');
+background-size: cover;
+background-position: left;
+overflow: hidden;
+width: 100%;
+height: 160px;
+margin-bottom: 20px;
+}

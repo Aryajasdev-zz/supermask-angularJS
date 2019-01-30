@@ -1,0 +1,258 @@
+﻿@model wigsboot.Models.order
+@using wigsboot.Models;     
+@{
+    Layout = null;
+    String curl = Request.Url.GetLeftPart(UriPartial.Authority);
+    String date = DateTime.Now.ToString();
+    String orderid=Model.orderid;
+    String name=Model.name;
+    String deladd = Model.custadd;
+    String custadd = Model.deladd;
+    String code=Model.code;
+    String custemail=Model.custemail;
+    String custphone=Model.custphone;
+    Int32 siteid=Model.siteid;
+    String discountcode=Model.discountcode;
+    Decimal discount=Model.discount;
+    Decimal donation=Model.donation;    
+    Decimal amount=Model.amount;
+    Decimal postage=Model.postage;
+    Int32 postageid=Model.postageid;
+    String ptype=Model.ptype;
+    String sitename=Model.sitename;
+    String postname=Model.postname;
+    String site=Model.sitecode;
+    String website = Model.website;
+    String companyphone = Model.phone;
+    String companyemail = Model.email;
+    Decimal preamt = amount - postage;
+    Decimal amtafterdis = preamt;
+    Int32 infoid = Model.infoid;
+    Session["totqty"] = 0;
+    Session["totamt"] = 0;
+
+    promotion pr = new promotion(discountcode);
+    String gifttr = "";
+    if (pr.dtype == 4)
+    {
+        String gimg = Common.imgurl + pr.img;
+        gifttr = "<tr bgcolor=\"#ffffff\"><td id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;\">1</td><td id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;\"><img src='" + gimg + "' width=50 height=50 />" + pr.name + "</td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(0, true) + "</td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(0) + "</td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(0) + "</td></tr>";
+    }
+    
+    if (discount > 0)
+    {
+        preamt = preamt + discount;
+    }
+   
+    Decimal amtvat = Convert.ToDecimal(Common.getvat(preamt));
+    Decimal prevatamt = preamt - amtvat;
+    
+    Decimal postvat = Convert.ToDecimal(Common.getvat(postage));
+    Decimal prevatpost = postage - postvat;
+
+    Decimal tamtvat = Convert.ToDecimal(Common.getvat(amount));
+    Decimal prevattamt = amount - tamtvat;
+    
+    String tbl = "";
+    IEnumerable<basket> bask;
+    if(infoid>0){
+         bask = basket.getbasketinfo(infoid);
+    }else{
+        bask = basket.getbasketSuccess(orderid);
+    }
+    foreach(var itm in bask){
+        Int32 id=itm.prodid;
+        String img = Common.imgurl + itm.img;	
+		String pname=itm.prodname;		
+	    Decimal price=itm.price;
+		String size = itm.prodsize;
+        String descr = itm.descr;
+        Int32 zerovat = itm.zerovat;
+        if (descr.Length > 0)
+        {
+            descr = "(" + descr + ")";
+        }
+        if(size=="N/A"){
+            size = "";
+        }
+		Int32 qty=itm.qty;
+		Decimal amt=price*qty;
+        String url = curl + "/" + itm.url;
+        Decimal vat = 0;
+        Decimal prevat = amt;
+        if (zerovat == 0)
+        {
+            vat = Convert.ToDecimal(Common.getvat(amt));
+            prevat = (amt - vat);
+        }
+        else
+        {
+            vat = Convert.ToDecimal(Common.getvat(amt));
+            amtvat = amtvat - vat;
+            tamtvat = tamtvat - vat;
+            prevatamt = prevatamt + vat;
+            prevattamt = prevattamt + vat;
+            prevat = amt;
+            vat = 0;
+        }   
+        
+		if (qty>1){
+            name = name+" @ "+Common.toPounds(price,true)+" ea.";						
+        }
+        tbl = tbl + "<tr bgcolor=\"#ffffff\"><td id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;\">" + qty + "</td><td id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;\"><a href='" + url + "'><img src='" + img + "' width=50 height=50 />" + pname + " " + descr + " : " + size + "</a></td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(prevat, true) + "</td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(vat) + "</td><td align=\"center\" id=\"invoiceitemsrow\" style=\"border:1px solid #cccccc;border-bottom:0px;border-left:0px;\">" + Common.toPounds(amt) + "</td></tr>";
+    }
+	
+}	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html dir="ltr" lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+	<title>@sitename Invoice</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" /> 
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<script type="text/javascript" language="javascript">
+	    $(function () {
+	        $(this).bind("contextmenu", function (e) {
+	            e.preventDefault();
+	        });
+	    }); 
+	</script>
+    <link href="@curl/Content/lib/style.css" rel="stylesheet" type="text/css">
+    <link href="@curl/Content/lib/responsive.css" rel="stylesheet" type="text/css">
+    <script src="@curl/Content/lib/responsive.js" type="text/javascript"></script>    
+</head>
+<body>    
+<div class="container">
+	<div class="header">
+		<div class="left">
+			<div class="company">
+				<p><a href="@website"><img src="@curl/Content/images/logo.png" alt="@site" class="img-respond logomaxwidth" /></a></p>			
+			</div>						
+		</div>
+		<div class="right">
+			<p class="status unpaid">Processed Successfully</p>
+			<div class="payment paymentinvoice">
+				<p><strong>Invoice: @orderid</strong><br />
+				Invoice Date: @date<br />			
+				Total Paid:: <strong class="totaldue1">&pound;&nbsp;@amount</strong></p>
+			</div>									
+		</div>
+		<div class="clear">&nbsp;</div>
+	</div>
+	<div class="inner">		
+        <div class="table-responsive table-grey">
+        <center>
+            <table>
+                <tr>
+                    <td>Billing Address</td>
+                    <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+                    <td>Delivery Address</td>
+                </tr>
+                <tr>
+                    <td>@Html.Raw(HttpUtility.HtmlDecode(custadd))</td>
+                    <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            
+                </td>
+                <td>@Html.Raw(HttpUtility.HtmlDecode(deladd))</td>            
+                </tr>
+                <tr>
+                    <td>Email : @custemail</td>	
+                    <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>            
+			        <td></td>
+                </tr>
+                <tr>
+                    <td>Phone : @custphone</td>	
+                    <td>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </td>
+			        <td></td>            
+                </tr>
+            </table>
+         </center>			
+		<div class="clear">&nbsp;</div>
+	</div>			
+	<div class="table-responsive table-grey">
+	<table>
+		<tr>			
+			<td id="invoiceitemsheading" align="center" width="10%" style="border:1px solid #cccccc;border-bottom:0px;"><strong>Qty</strong></td>			
+            <td id="invoiceitemsheading" align="center" width="60%" style="border:1px solid #cccccc;border-bottom:0px;"><strong>Product Description</strong></td>			
+            <td id="invoiceitemsheading" align="center" width="10%" style="border:1px solid #cccccc;border-left:0px;border-bottom:0px;"><strong>Net</strong></td>
+            <td id="invoiceitemsheading" align="center" width="10%" style="border:1px solid #cccccc;border-left:0px;border-bottom:0px;"><strong>Vat</strong></td>
+			<td id="invoiceitemsheading" align="center" width="10%" style="border:1px solid #cccccc;border-left:0px;border-bottom:0px;"><strong>Amount</strong></td>
+		</tr>
+		@Html.Raw(HttpUtility.HtmlDecode(tbl))
+        @Html.Raw(HttpUtility.HtmlDecode(gifttr))
+		<tr>
+			<td colspan=2 id="invoiceitemsheading" style="border:1px solid #cccccc;border-bottom:0px;"><div align="right">Sub Total:&nbsp;</div></td>			
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(prevatamt, true)))</strong></td>
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(amtvat,true)))</strong></td>
+			<td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(preamt,true)))</strong></td>
+		</tr>
+        @if (discount > 0)
+            {
+            <tr>
+			    <td colspan=4 id="invoiceitemsheading" style="border:1px solid #cccccc;border-bottom:0px;"><div align="right">Discount:&nbsp;</div></td>			        
+                <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;-@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(discount, true)))</strong></td>
+		</tr>
+              <tr>
+			    <td colspan=4 id="invoiceitemsheading" style="border:1px solid #cccccc;border-bottom:0px;"><div align="right">Sub Total After Discount:&nbsp;</div></td>			        
+                <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(amtafterdis, true)))</strong></td>
+		</tr>             
+            }        
+		<tr>
+			<td colspan=2 id="invoiceitemsheading" style="border:1px solid #cccccc;border-bottom:0px;"><div align="right">@postname Delivery:&nbsp;</div></td>			            
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(prevatpost, true)))</strong></td>
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(postvat, true)))</strong></td>
+			<td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-bottom:0px;border-left:0px;"><strong>&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(postage, true)))</strong></td>
+		</tr>
+		<tr>
+			<td colspan=2 id="invoiceitemsheading" style="border:1px solid #cccccc;"><div align="right">Total Including VAT & Delivery :&nbsp;</div></td>            
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-left:0px;"><strong class="totaldue">&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(prevattamt,true)))</strong></td>
+            <td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-left:0px;"><strong class="totaldue">&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(tamtvat,true)))</strong></td>
+			<td id="invoiceitemsheading" align="center" style="border:1px solid #cccccc;border-left:0px;"><strong class="totaldue">&nbsp;@Html.Raw(HttpUtility.HtmlDecode(Common.toPounds(amount,true)))</strong></td>
+		</tr>
+	</table>
+	</div>	
+	<div class="highlightbox greybox">
+		<p><center><strong>Notes</strong></center></p>
+		<p><center>Orders placed before 3pm will be dispatched the same day. Orders placed after 3pm will be dispatched the next working day.</center></p>
+        <p><center>Returns will only accepted under our <a target="_blank" href="@curl/terms-conditions">terms and conditions</a></center></p>
+		<p><center>If you have any queries, please contact us by sending an email to<br>@companyemail - or by call @companyphone Monday to Friday, between 09:30AM and 5:00PM.</center></p>
+		<p><center><strong><a href="http://www.partysuperstores.co.uk">Partysuperstores Ltd.</a></strong></center></p><br />
+		St Nicholas House<br/>
+        St Nicholas Way<br/>
+        Sutton, Surrey<br/>
+        SM1 1EH<br/>
+        VAT Reg. No. 649 0748 08
+		<p><center><a href=# onclick="window.print();">Print this page</a></center></p>
+        <div class="fb-like" data-href="https://www.facebook.com/partysuperstore" data-layout="standard" data-action="like" data-show-faces="true" data-share="true">
+        </div>
+	</div>
+</div>
+</div>
+<p><center>&copy;	Party Superstores Ltd. - All Rights Reserved 2016.</a></center></p>
+<div id="fb-root"></div>
+<div id="fb-root"></div>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=440435679329458&version=v2.3";
+        fjs.parentNode.insertBefore(js, fjs);
+    } (document, 'script', 'facebook-jssdk'));
+</script>
+</body>
+</html>
+
+
+
+

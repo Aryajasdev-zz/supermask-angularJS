@@ -1,0 +1,39 @@
+<div class="col-xs-10" style="padding-left:0px" ng-controller="realpayController">
+	<!-- Credit card form -->
+	<form method="POST" name="payment" target="iframe" action="https://hpp.sandbox.realexpayments.com/pay">
+		<input type="hidden" name="TIMESTAMP" value="{{payorder.timestamp}}">
+		<input type="hidden" name="MERCHANT_ID" value="{{payorder.merchantid}}">
+		<input type="hidden" name="ACCOUNT" value="{{payorder.account}}">
+		<input type="hidden" name="ORDER_ID" value="{{payorder.orderid}}">
+		<input type="hidden" name="AMOUNT" value="{{payorder.amount}}">
+		<input type="hidden" name="CURRENCY" value="GBP">
+		<input type="hidden" name="SHA1HASH" value="{{payorder.realcode}}">
+		<input type="hidden" name="AUTO_SETTLE_FLAG" value="1">
+		<input type="hidden" name="COMMENT1" value="Mobile Channel">
+		<input type="hidden" name="COMMENT2" value="Down Payment">  
+		<input type="hidden" name="PROD_ID" value="{{payorder.orderid}}">
+		<input type="hidden" name="HPP_LANG" value="GB">
+		<input type="hidden" name="HPP_VERSION" value="2">
+		<input type="hidden" name="MERCHANT_RESPONSE_URL" value="http://www.trivid.co.uk/confirm/party">
+		<input type="hidden" name="CARD_PAYMENT_BUTTON" value="Pay Now">
+		<input type="hidden" name="SUPPLEMENTARY_DATA" value="Custom Value">
+		<input type="submit" class="hidden" value="Click To Pay">
+	</form>
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="well">
+				<div class="vs"><center><h3>SuperParty Masks.co.uk Secure Payment</h3></center></div>
+				<div style="overflow:hidden;">
+					<center>
+						<iframe class="container well well-small" style="border:0px none;height:850px;width:100%;" frameborder="0" name="iframe"></iframe>
+					</center>
+				</div>         
+				<div class="vs"><center>Our Online Payment Processing is completly secure and endorsed with Geo Trust SSL Certificates</center></div>
+				<div class="vs"><center>Copyright � Party Superstores Limited </center></div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">					
+		
+	</script>	
+</div>

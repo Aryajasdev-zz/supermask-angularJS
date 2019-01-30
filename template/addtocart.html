@@ -1,0 +1,24 @@
+<div ng-hide="attrs.id">
+	<a class="btn btn-lg btn-primary" ng-disabled="true" ng-transclude></a>
+</div>
+<div ng-show="attrs.id">
+	<div>
+		<span ng-show="quantityMax" class="hidden">
+			<select name="quantity" id="quantity" ng-model="q" ng-options=" v for v in qtyOpt"></select>
+		</span>
+		<div class="row">			
+			<div ng-class="isdetails==1?'col-xs-6':'col-xs-12'">			
+				<button class="atc btn btn-primary btn-sm btn-raised btn-block'"  ng-disabled="isstock==0"
+					ng-click="ngCart.addItem(id, name, price, q, data, url, img, sizeid, isstock)" onclick="openSlide()" ng-transclude>
+				</button>
+			</div>
+			
+			<div class="col-xs-6" ng-show="isdetails==1">
+				<a href="#product-info/{{url}}" class="btn btn-info btn-details btn-sm btn-raised btn-block">Details</a>
+			</div>
+		</div>
+		<div class="alert alert-warning alert-sm"  ng-show="inCart()">
+			This item is in your cart. <a class="btn btn-xs btn-default pull-right" ng-click="ngCart.removeItemById(id)"  onclick="openSlide()">Remove</a><span class="clearfix"></span>
+		</div>
+	</div>
+</div>	

@@ -1,0 +1,77 @@
+<header>
+	<nav class="navbar navbar-default navbar-xs" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#home">Superparty<b>Masks</b></a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#"><i class="glyphicon glyphicon-adjust"></i></a></li>
+					<li><a href="#"><i class="glyphicon glyphicon-bell"></i></a></li>
+					<li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<nav class="navbar navbar-default" role="navigation" ng-controller="mainController">
+		<div class="navbar-header">
+			<a class="navbar-brand hidden-xs hidden-sm" ui-sref="home">
+				<img src="images/logo.png" class="img-responsive">
+			</a>
+        </div>
+        <div>
+			<button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+				<i class="fa fa-list fa-2x"></i>
+			</button>
+			<button type="button" class="navbar-toggle" onclick="toggleSlide()">
+				<i class="fa fa-shopping-cart fa-2x"></i>
+			</button>
+			<button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+				<i class="fa fa-search fa-2x"></i>
+			</button>
+			<a class="navbar-brand visible-sm visible-xs logo-img" ui-sref="home">
+				<img src="images/logo.png" class="img-responsive">
+			</a>
+		</div>
+		<div class="collapse navbar-collapse" uib-collapse="!isNavCollapsed">
+			<div class="nav navbar-nav visible-xs visible-sm">
+				<div class="row">
+					<form class="navbar-form" role="search">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search" ng-model="q" name="q" ng-enter="search()" />
+							<div class="input-group-btn">
+								<a class="btn btn-default" href="#/search/{{q}}"><i class="fa fa-search fa-2x"></i></a>
+							</div>
+						</div>
+					</form>
+					<div class="col-xs-6 table-bordered" role="presentation" ng-repeat="cat in Categories">
+						<a ng-click="changeMainCat(cat.url,cat.name)" role="tab">
+							<img ng-src="{{cat.catimg}}" class="img-responsive img-rounded" alt="{{cat.name}}">
+						</a>
+					</div>
+				</div>
+            </div>
+			<ul class="nav navbar-nav navbar-right hidden-sm hidden-xs" ng-controller="HeaderController">
+				<li style="border-left:1px solid #ccc; padding: 6px 0;">
+					<form class="navbar-form forsearch" role="search">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search" ng-model="q" name="q" ng-enter="search()">
+							<div class="input-group-btn">
+								<a class="btn btn-default" href="#/search/{{q}}"><i class="fa fa-search fa-2x"></i></a>
+							</div>
+						</div>
+					</form>
+				</li>
+				<li style="border-left:1px solid #ccc;cursor: pointer;" onclick="toggleSlide()">
+					<div class="col-xs-4">
+						<span class="btn btn-link shopping-cart"><i class="fa fa-shopping-basket fa-2x"></i></span>
+					</div>
+					<div class="col-xs-8 vs20">
+						<ngcart-summary class=""></ngcart-summary>
+					</div>
+				</li>
+            </ul>
+		</div>
+    </nav>
+</header>

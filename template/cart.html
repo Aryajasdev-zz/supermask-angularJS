@@ -1,0 +1,61 @@
+<div class="slidecart animated">
+	<div class="chkout-btn">	
+		<div class="row">
+			<div class="col-xs-5 text-center"><u>Total</u>
+				<strong>{{ ngCart.getSubTotal() | currency:"&pound;"}}</strong>
+			</div>
+			<div class="col-xs-7 text-center"><a class="label label-info" href="#/checkout">To Checkout</a></div>
+		</div>
+	</div>
+	<hr/>
+	<div class="clearfix"></div>
+	<div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0">
+		Your cart is empty
+	</div>
+	<div ng-show="ngCart.getTotalItems() > 0">
+		<div class="ngCart cart vs5" ng-repeat="item in ngCart.getCart().items track by $index">
+			<div class="row">
+				<div class="col-xs-4">
+					<img class="img-responsive" ng-src="{{ item.getImg() }}" alt="{{ item.getImg() }}" />
+				</div>
+				<div class="col-xs-6 text-right"><h5>{{ item.getName() }}</h5></div>
+				<div class="col-xs-2">
+				`	<span class="remove-prod" ng-click="ngCart.removeItemById(item.getId())">
+						<i class="fa fa-remove text-danger fa-2x"></i>
+					</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<p class="small"><strong>Quantity</strong></p>
+					<div class="chkout-qty-cart">
+						<div class="input-group">
+							<span class="input-group-btn">
+								<button class="btn btn-info btn-xs" ng-class="{'disabled':item.getQuantity()==1}"
+									ng-click="item.setQuantity(-1, true)"><i class="fa fa-minus fa-2x"></i>
+								</button>
+							</span>
+							<div class="chkout-qty-n"><strong>{{ item.getQuantity() | number }}</strong></div>
+							<span class="input-group-btn">
+								<button class="btn btn-info btn-xs" ng-click="item.setQuantity(1, true)">
+									<i class="fa fa-plus fa-2x"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-5 text-left">
+					<p class="small">Price per item</p>
+					<strong>{{ item.getPrice() | currency:"&pound;"}}</strong>
+				</div>
+				<div class="col-xs-7 text-right">
+					<p class="small">Total</p>
+					<strong>{{ item.getTotal() | currency:"&pound;" }}</strong>
+				</div>
+			</div>
+			<hr/>
+		</div>
+	</div>
+</div>

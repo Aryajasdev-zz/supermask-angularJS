@@ -1,0 +1,311 @@
+<div class="container-fluid vs20">
+	<div class="alert alert-warning" role="alert" ng-show="ngCart.getTotalItems() === 0">
+		Your cart is empty
+	</div>
+</div>
+<div class="container vs20" ng-show="ngCart.getTotalItems() > 0">
+	<div class="row vs5" ng-repeat="item in ngCart.getCart().items track by $index">
+		<div class="panel panel-default box animated">
+			<div class="panel-heading" style="padding:0 10px">
+				<div class="row">
+					<div class="col-xs-9"><h4>{{ item.getName() }}</h4></div>
+					<div class="col-xs-3 text-right">
+						<div ng-click="ngCart.removeItemById(item.getId())" class="btn btn-danger btn-xs btn-raised">
+							<span class="hidden-xs">Remove</span> <i class="fa fa-remove"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="col-xs-3"><img class="img-responsive" ng-src="{{ item.getImg() }}" alt="{{ item.getImg() }}" /></div>
+					<div class="col-xs-12 col-md-4 text-center">
+						<div class="chkout-qty">
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button class="btn btn-info btn-sm" ng-class="{'disabled':item.getQuantity()==1}"
+										ng-click="item.setQuantity(-1, true)"><i class="fa fa-minus fa-2x"></i>
+									</button>
+								</span>
+								<div class="chkout-qty-n"><strong>{{ item.getQuantity() | number }}</strong></div>
+								<span class="input-group-btn">
+									<button class="btn btn-info btn-sm" ng-click="item.setQuantity(1, true)">
+										<i class="fa fa-plus fa-2x"></i>
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5  text-right">
+						<p class="small"><strong>Qty/Price</strong></p>
+						<strong>{{ item.getQuantity() | number }} <span class="small">x</span> {{ item.getPrice() | currency:"&pound;"}}</strong>
+					</div>
+			</div>			
+			<div class="panel-footer text-right">
+				<strong>Total: </strong>
+				<strong>{{ item.getTotal() | currency:"&pound;" }}</strong>
+			</div>			
+		</div>
+	</div>
+</div>
+<div class="container" ng-show="ngCart.getTotalItems()">
+	<div class="row">
+		<div class="col-xs-12 text-right">Sub Total:{{ ngCart.getSubTotal() | currency:"&pound;"}}</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-5">
+			<span>Postage Methods:</span>
+		</div>
+		<div class="col-xs-7">		
+			<div ng-repeat="pst in postages">
+				<input type="radio" name="pmethod" ng-click="ngCart.ChangePostage(pst.amt, pst.postageid)" ng-checked="pst.postageid==3" value="pst.postageid">{{pst.method}} - {{pst.amt | currency:"&pound;"}} 
+			</div>
+		</div>	
+	</div>	
+	<div class="row">
+		<div class="col-xs-12 text-right">Total:{{ ngCart.totalCost() | currency:"&pound;"}}</div>
+	</div>
+</div>
+<div class="container">
+	<div class="row">		
+		<div class="col-sm-12">
+			<center>				
+				 <button class="btn btn-block btn-primary" ng-click="checkout('paypal')" ng-disabled="ngCart.getTotalItems() < 1">
+                    <i class="icon-ok icon-white" /> Check out using PayPal
+                </button>				
+			</center>
+		</div>
+	</div>
+</div>	
+<div class="container" ng-show="ngCart.getTotalItems()">
+	<div class="realex-form">
+		<div class="sub-page-title">
+			<a id="realex"></a>
+			<div class="alert alert-info">
+				<div class="g_title">
+					<i class="fa fa-truck"></i> Shipping & Billing Details  <i class="fa fa-level-down"></i>
+				</div>
+			</div>
+			<hr />
+		</div>
+		<form name="customerform" novalidate ng-submit="customerform.$valid && checkout('http')">
+			<div class="row">
+				<div class="col-lg-6 col-md-6">
+					<div class="well">
+						<fieldset>
+							<legend>Billing Details<i class="fa fa-user pull-right"></i></legend>
+							<div class="form-group" id="grptitle">
+								<label class="col-lg-3 control-label" for="cardTitle">Title</label>
+								<div class="col-lg-9">
+									<select name="cardTitle" id="cardTitle"  ng-model="billing.cardTitle" class="form-control">
+										<option>Select</option>
+										<option>Ms</option>
+										<option>Mr</option>
+										<option>Miss</option>
+										<option>Mrs</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group" id="grpcname">
+								<label class="col-lg-3 control-label" for="cardName">Name</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardName" ng-model="billing.cardName"  required="" name="cardName"  placeholder="Enter Name" />									
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardName.$touched">
+									<div ng-show="form.cardName.$error.required">Enter Your Name Please!</div>
+								</div>
+							</div>		
+							<div ng-controller="CartController" id="grpepcode">	
+								<div class="form-group">
+									<label class="col-lg-3 control-label" for="cardepcode">Enter Postcode</label>
+									<div class="col-lg-6">
+										<input type="text" class="form-control" id="cardepcode" ng-model="cardepcode" name="cardepcode" placeholder="Enter Postcode to search" />
+									</div>
+									<div class="col-lg-3">
+										<a class="btn btn-info btn-block glow" id="searchpc" ng-click="getaddress()"> Search</a>
+									</div>
+								</div>
+								<div class="form-group" id="grpaddresses" ng-show="isadd">
+									<label class="col-lg-3 control-label" for="ladd">Select Address</label>
+									<select id="ladd" name="ladd" ng-model="pcodeadds" ng-Change="showaddress();" class="show-menu-arrow form-control"  ng-options='add for add in adds' data-style="btn-default"></select>		
+								</div>
+							</div>		
+							<div class="form-group" id="grpaddress">
+								<label class="col-lg-3 control-label" for="cardHno">House/Flat No</label>
+								<div class="col-lg-9">									
+									<input type="text" class="form-control" id="cardHno" ng-model="billing.cardHno"  required="" name="cardHno"  placeholder="Enter Billing House/Flat No" />									
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardHno.$touched">
+									<div ng-show="form.cardHno.$error.required">Enter Your House/Flat No!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpaddress">
+								<label class="col-lg-3 control-label" for="cardAddress">Address</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardAddress" ng-model="billing.cardAddress"  required="" name="cardAddress"  placeholder="Enter Billing Address" />									
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardAddress.$touched">
+									<div ng-show="form.cardAddress.$error.required">Enter Your Address</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpaddress">
+								<label class="col-lg-3 control-label" for="cardCity">City</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardCity" ng-model="billing.cardCity"  required="" name="cardCity"  placeholder="Enter Billing City" />								
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardCity.$touched">
+									<div ng-show="form.cardCity.$error.required">Enter Your City!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpaddress">
+								<label class="col-lg-3 control-label" for="cardCounty">County</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardCounty" ng-model="billing.cardCounty"  required="" name="cardCounty"  placeholder="Enter Billing County" />										
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardCounty.$touched">
+									<div ng-show="form.cardCounty.$error.required">Enter Your County!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpaddress">
+								<label class="col-lg-3 control-label" for="cardCountry">Country</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardCountry" ng-model="billing.cardCountry"  required="" name="cardCountry"  placeholder="Enter Billing Country" />								
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardCountry.$touched">
+									<div ng-show="form.cardCountry.$error.required">Enter Your Country!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpcpcode">
+								<label class="col-lg-3 control-label" for="cardPostcode">Post Code</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="cardPostcode" ng-model="billing.cardPostcode"  required="" name="cardPostcode" placeholder="Enter Postcode">
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.cardPostcode.$touched">
+									<div ng-show="form.cardPostcode.$error.required">Enter Your Postcode Please!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpcemail">
+								<label class="col-lg-3 control-label" for="email">Email address</label>
+								<div class="col-lg-9">
+									<input type="email" class="form-control" id="email" name="email" ng-model="billing.email"  required="" placeholder="Enter Email">
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.email.$touched">
+									<div ng-show="form.email.$error.required">Enter Your Email Please!</div>
+									<div ng-show="form.email.$error.email">Enter Your Email Please!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpcfmail">
+								<label class="col-lg-3 control-label" for="cfmail">Confirm Email address</label>
+								<div class="col-lg-9">
+									<input type="email" class="form-control" id="cfmail" name="cfmail" ng-model="billing.cfmail"  required="" placeholder="Confirm Email">
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.email.$touched">
+									<div ng-show="form.cfmail.$error.required">Enter Your Confirm Email Please!</div>
+									<div ng-show="form.cfmail.$error.email">Enter Your Confirm Email Please!</div>
+								</div>
+							</div>
+							<div class="form-group" id="grpcphone">
+								<label class="col-lg-3 control-label" for="phone">Phone Number</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="phone" name="phone" ng-model="billing.phone"  placeholder="Enter Phone Number">
+								</div>
+								<div class="alert alert-danger" ng-show="form.$submitted || form.email.$touched">
+									<div ng-show="form.phone.$error.required">Enter Your Email Please!</div>									
+								</div>
+							</div>										
+						</fieldset>
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6">			
+					<div class="well">
+						<fieldset>
+							<legend>Delivery Address<i class="glyphicon glyphicon-home pull-right"></i></legend>							
+							<label for="fordelivery">Same as Billing</label>
+							<input id="fordelivery" type="checkbox" name="isdel" ng-click="checkdel()" value="no">															
+							<div class="biz-address chekout-address vs20">
+								<fieldset>
+									<div class="form-group">
+										<label class="col-lg-3 control-label" for="deliveryName"> Name</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryName" ng-model="delivery.cardName" name="deliveryName" placeholder="Enter Alternative Name">
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryName.$touched">
+											<div ng-show="form.deliveryName.$error.required">Enter Your Name Please!</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpaddress">
+										<label class="col-lg-3 control-label" for="cardHno">House/Flat No</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryHno" ng-model="delivery.cardHno" name="deliveryHno" placeholder="Enter Delivery House/Flat No">							
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryHno.$touched">
+											<div ng-show="form.deliveryHno.$error.required">Enter Your Delivery House/Flat No!</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpaddress">
+										<label class="col-lg-3 control-label" for="deliveryAddress">Address</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryAddress" ng-model="delivery.cardAddress" name="deliveryAddress" placeholder="Enter Delivery Address">										
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryAddress.$touched">
+											<div ng-show="form.deliveryAddress.$error.required">Enter Your Delivery Address</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpaddress">
+										<label class="col-lg-3 control-label" for="deliveryCity">City</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryCity" ng-model="delivery.cardCity" name="deliveryCity" placeholder="Enter Delivery City">									
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryCity.$touched">
+											<div ng-show="form.deliveryCity.$error.required">Enter Your Delivery City!</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpaddress">
+										<label class="col-lg-3 control-label" for="deliveryCounty">County</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryCounty" ng-model="delivery.cardCounty" name="deliveryCounty" placeholder="Enter Delivery County">								
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryCounty.$touched">
+											<div ng-show="form.deliveryCounty.$error.required">Enter Your Delivery County!</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpaddress">
+										<label class="col-lg-3 control-label" for="deliveryCountry">Country</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryCountry" ng-model="delivery.cardCountry" name="deliveryCountry" placeholder="Enter Delivery Country">									
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryCountry.$touched">
+											<div ng-show="form.deliveryCountry.$error.required">Enter Your Country!</div>
+										</div>
+									</div>
+									<div class="form-group" id="grpcpcode">
+										<label class="col-lg-3 control-label" for="deliveryPostcode">Post Code</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryPostcode" ng-model="delivery.cardPostcode"  required="" name="deliveryPostcode" placeholder="Enter Postcode">
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryPostcode.$touched">
+											<div ng-show="form.deliveryPostcode.$error.required">Enter Your Postcode Please!</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-lg-3 control-label" for="deliveryPhone">Contact Phone</label>
+										<div class="col-lg-9">
+											<input type="text" class="form-control" id="deliveryPhone" name="deliveryPhone" ng-model="delivery.phone" placeholder="Enter Alternative Number">
+										</div>
+										<div class="alert alert-danger" ng-show="form.$submitted || form.deliveryPhone.$touched">
+											<div ng-show="form.deliveryPhone.$error.required">Enter Your Name Please!</div>
+										</div>
+									</div>
+								</fieldset>							
+							</div>						
+						</fieldset>						
+					</div>   
+					<div class="col-lg-6 col-md-6">	                    				
+						<div class="well">				    
+							<button class="btn btn-primary" type="submit" ng-transclude>Pay Now</button>
+						</div>					
+					</div>				
+				</div>            
+			</div>
+		</form>
+	</div>
+</div>	

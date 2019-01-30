@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="myngApp" role="main">
+<head>
+    <base href="/">
+    <title>Super Party Masks</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+    @Styles.Render("~/Content/css")
+    <script src="~/lib/angular.js"></script>
+    <script src="~/lib/angular-ui-router.js"></script>
+</head>
+<body ng-controller="MainCtrl">
+    <div id="menu" class="slideout-menu">
+        <div class="row" style="height: 100%;">
+            <div class="col-xs-2 close-slide text-center"><i class="fa fa-remove text-danger"></i></div>
+            <div class="col-xs-10" style="padding-left:0px">
+                <ngcart-cart></ngcart-cart>
+            </div>
+        </div>
+    </div>
+    <main id="panelx" class="panel slideout-panel content" ng-class="{'sidenav-open': tgState}">
+        <div header></div>
+        <div id="main">
+            <div ui-view></div>
+        </div>
+        <div footer></div>
+    </main>    
+    @Scripts.Render("~/bundles/myngscripts")    
+    <script src="~/lib/angular-animate.min.js"></script>
+    <script src="~/lib/angular-scroll.js"></script>
+    <script src="~/lib/dirPagination.js"></script>
+    <script src="~/lib/countdownTimer.js"></script>
+    <script src="~/lib/percent-circle-directive.js"></script>
+    <script src="~/lib/angular-stepper.min.js"></script>
+    <script src="~/lib/angular-spinners.min.js"></script>
+    <script src="~/lib/ngDialog.js"></script>
+    <script src="~/lib/velocity.min.js"></script>
+    <script src="~/lib/velocity.ui.min.js"></script>
+    <script src="~/lib/angular-velocity.min.js"></script>
+    <script src="~/lib/slideout.min.js"></script>
+    <script src="~/lib/alasql.min.js"></script>
+    <script src="~/Scripts/common.js"></script>
+    <script src="~/Scripts/ngCart.js"></script>
+</body>
+</html>
